@@ -1,36 +1,36 @@
 package net.ettaqy.customerservice.service;
 
+
 import net.ettaqy.customerservice.entities.Customer;
 import net.ettaqy.customerservice.repository.CustomerRepository;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CustomerService {
-    private CustomerRepository customerRepository;
 
+    private final CustomerRepository customerRepository;
 
-    //injection des dependances par Contructor
-    public CustomerService (CustomerRepository customerRepository){
-        this.customerRepository=customerRepository;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
-    public List<Customer> getAllCustomers(){
-
+    @Tool(description = "Get all customers")
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-
-    public Customer findCustomerById(Long id){
+    @Tool(description = "Find customer by ID")
+    public Customer findCustomerById(@ToolParam(description = "The customer ID") Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Customer Not found"));
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
-
-    //ajouter customer
-    public Customer saveCustomer(Customer customer){
-
-        return customerRepository.save(customer); //save methode de JpaRepository
+    @Tool(description = "Save a new customer with name and email")
+    public Customer saveCustomer(@ToolParam(description = "Customer object with name and email") Customer customer) {
+        return customerRepository.save(customer);
     }
 }
